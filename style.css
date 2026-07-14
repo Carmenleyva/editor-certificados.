@@ -76,6 +76,9 @@ body {
 /* Cabecera */
 
 .cabecera-app {
+
+  position: relative;
+
   margin-bottom: 35px;
   overflow: hidden;
   border: 1px solid var(--borde);
@@ -1047,4 +1050,304 @@ input[type="file"] {
 
   font-size: 13px;
 
+}
+/* ======================================================
+   MODO OSCURO
+====================================================== */
+
+.boton-modo{
+
+  position:absolute;
+
+  top:18px;
+
+  right:18px;
+
+  width:44px;
+  height:44px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:0;
+
+  border:none;
+  border-radius:50%;
+
+  background:white;
+
+  color:var(--azul);
+
+  font-size:22px;
+
+  cursor:pointer;
+
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+  z-index:100;
+
+}
+
+body.modo-oscuro .cabecera-app,
+body.modo-oscuro .bloque-editor,
+body.modo-oscuro .estado-card,
+body.modo-oscuro .mensaje-bienvenida {
+  background-color: #22323a;
+  border-color: #40535c;
+}
+
+body.modo-oscuro input,
+body.modo-oscuro select,
+body.modo-oscuro .editor-texto,
+body.modo-oscuro #codigoActual {
+  background-color: #17242b;
+  color: #edf4f6;
+  border-color: #52666f;
+}
+
+body.modo-oscuro .editor-texto {
+  caret-color: white;
+}
+
+body.modo-oscuro .boton-modo {
+  background-color: #17242b;
+  color: white;
+  border-color: #52666f;
+}
+
+body.modo-oscuro .boton-cargar-configuracion,
+body.modo-oscuro .boton-subir-fuente {
+  color: white;
+}
+
+body.modo-oscuro .certificado {
+  background-color: white;
+}
+/* ======================================================
+   ZONAS PARA ARRASTRAR ARCHIVOS
+====================================================== */
+
+.zona-arrastre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 125px;
+  padding: 20px;
+
+  text-align: center;
+
+  color: var(--texto-suave);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(67, 184, 191, 0.06),
+      rgba(255, 165, 31, 0.06)
+    ),
+    white;
+
+  border: 2px dashed var(--borde);
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.zona-arrastre:hover {
+  border-color: var(--turquesa);
+  transform: translateY(-1px);
+}
+
+.zona-arrastre-icono {
+  margin-bottom: 8px;
+  font-size: 30px;
+}
+
+.zona-arrastre strong {
+  margin-bottom: 4px;
+  color: var(--azul);
+  font-size: 15px;
+}
+
+.zona-arrastre span:last-child {
+  font-size: 13px;
+}
+
+.zona-arrastre.arrastrando {
+  border-color: var(--azul);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(67, 184, 191, 0.14),
+      rgba(0, 109, 165, 0.08)
+    ),
+    white;
+
+  transform: scale(1.01);
+}
+
+body.modo-oscuro .zona-arrastre {
+  background: #17242b;
+  border-color: #52666f;
+}
+
+body.modo-oscuro .zona-arrastre strong {
+  color: #75d1d6;
+}
+/* ==========================================
+   HISTORIAL DE PLANTILLAS
+========================================== */
+
+#historialPlantillas{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-top:18px;
+}
+
+.plantilla-historial{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:14px 18px;
+
+  border:1px solid #d8e3e8;
+  border-radius:12px;
+
+  background:#f8fbfc;
+}
+
+.plantilla-historial-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.plantilla-historial-nombre{
+  font-size:19px;
+  color:var(--azul);
+}
+
+.plantilla-historial-fecha{
+  font-size:14px;
+  color:#6c7a86;
+}
+
+.plantilla-historial-acciones{
+  display:flex;
+  gap:10px;
+}
+
+.plantilla-historial-acciones button{
+  min-width:85px;
+}
+
+.buscar-plantilla{
+  margin-top:12px;
+  margin-bottom:10px;
+}
+.fila-configuracion{
+  margin-top:18px;
+  margin-bottom:8px;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.separador-plantillas{
+  margin:24px 0 28px;
+}
+
+.titulo-historial{
+  margin-top:0;
+  margin-bottom:18px;
+}
+/* ======================================================
+   AUTOAJUSTE INTELIGENTE
+====================================================== */
+
+.autoajuste-panel{
+    margin-top:25px;
+    padding-top:20px;
+    border-top:1px solid #d9e5ec;
+}
+
+.autoajuste-panel h4{
+    margin:0 0 10px;
+    color:#0b6cae;
+    font-size:20px;
+}
+
+.descripcion-autoajuste{
+    margin:0 0 18px;
+    color:#555;
+    font-size:14px;
+    line-height:1.4;
+}
+
+.lista-autoajuste{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.lista-autoajuste label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.lista-autoajuste input[type="checkbox"]{
+    transform:scale(1.15);
+}
+/* ======================================================
+   CASOS ESPECIALES
+====================================================== */
+
+.fila-caso-especial{
+  margin:18px 0 22px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+#guardarAjustesParticipante{
+  width:100%;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  background:#ff9800;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+#guardarAjustesParticipante:hover:not(:disabled){
+  background:#f57c00;
+}
+
+#guardarAjustesParticipante:disabled{
+  background:#d9d9d9;
+  color:#888;
+  cursor:not-allowed;
+}
+
+#estadoAjusteParticipante{
+  margin:0;
+  font-size:13px;
+  color:#2e7d32;
+  font-weight:600;
 }

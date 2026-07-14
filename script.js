@@ -24,10 +24,213 @@ const certificadoSiguiente =
     "certificadoSiguiente"
   );
 
+const botonGuardarAjustesParticipante =
+  document.getElementById(
+    "guardarAjustesParticipante"
+  );
+
+const estadoAjusteParticipante =
+  document.getElementById(
+    "estadoAjusteParticipante"
+  );
+
 let participantes = [];
 let participanteSeleccionado = null;
 
+/* ======================================================
+   AJUSTES MANUALES POR PARTICIPANTE
+====================================================== */
 
+const ajustesParticipantes = {};
+
+const tamanosBase = {
+  nombre: 18,
+  texto1: 12,
+  texto2: 12,
+  fecha: 10
+};
+
+function actualizarTamanosBaseDesdeVistaActual() {
+  tamanosBase.nombre =
+    Number(tamanoTexto.value);
+
+  tamanosBase.texto1 =
+    Number(tamanoContenido.value);
+
+  tamanosBase.texto2 =
+    Number(tamanoContenidoDos.value);
+
+  tamanosBase.fecha =
+    Number(tamanoFecha.value);
+}
+
+function obtenerClaveParticipante(
+  persona,
+  indice
+) {
+  const codigo =
+    convertirATexto(
+      persona.codigo
+    );
+
+  if (codigo !== "") {
+    return codigo;
+  }
+
+  return "participante-" + indice;
+}
+
+
+function obtenerAjustesParticipante(
+  persona,
+  indice
+) {
+  const clave =
+    obtenerClaveParticipante(
+      persona,
+      indice
+    );
+
+  if (!ajustesParticipantes[clave]) {
+    ajustesParticipantes[clave] = {};
+  }
+
+  return ajustesParticipantes[clave];
+}
+function obtenerAjustesParticipante(
+  persona,
+  indice
+) {
+  const clave =
+    obtenerClaveParticipante(
+      persona,
+      indice
+    );
+
+  if (!ajustesParticipantes[clave]) {
+    ajustesParticipantes[clave] = {};
+  }
+
+  return ajustesParticipantes[clave];
+}
+
+
+/* Guardar cambios manuales del participante actual */
+
+function guardarAjusteActual(
+  campo,
+  valor
+) {
+  if (!participanteSeleccionado) {
+    return;
+  }
+
+  const indice =
+    Number(
+      selectorParticipante.value
+    );
+
+  if (!Number.isInteger(indice)) {
+    return;
+  }
+
+  const ajustes =
+    obtenerAjustesParticipante(
+      participanteSeleccionado,
+      indice
+    );
+
+  ajustes[campo] =
+    Number(valor);
+}
+/* Guardar cambios manuales del participante actual */
+
+function guardarAjusteActual(
+  campo,
+  valor
+) {
+  if (!participanteSeleccionado) {
+    return;
+  }
+
+  const indice =
+    Number(
+      selectorParticipante.value
+    );
+
+  if (!Number.isInteger(indice)) {
+    return;
+  }
+
+  const ajustes =
+    obtenerAjustesParticipante(
+      participanteSeleccionado,
+      indice
+    );
+
+  ajustes[campo] =
+    Number(valor);
+}
+
+
+/* Guardar todos los ajustes del caso especial */
+
+function guardarTodosLosAjustesActuales() {
+  if (!participanteSeleccionado) {
+    alert(
+      "Primero selecciona un participante."
+    );
+
+    return;
+  }
+
+  const indice =
+    Number(
+      selectorParticipante.value
+    );
+
+  const ajustes =
+    obtenerAjustesParticipante(
+      participanteSeleccionado,
+      indice
+    );
+
+  ajustes.nombre =
+    Number(
+      tamanoTexto.value
+    );
+
+  ajustes.texto1 =
+    Number(
+      tamanoContenido.value
+    );
+
+  ajustes.texto2 =
+    Number(
+      tamanoContenidoDos.value
+    );
+
+  ajustes.fecha =
+    Number(
+      tamanoFecha.value
+    );
+
+  ajustes.esManual =
+    true;
+
+  estadoAjusteParticipante.textContent =
+    "✓ Caso especial guardado para " +
+    convertirATexto(
+      participanteSeleccionado
+        .nombresApellidos
+    );
+}
+
+
+botonGuardarAjustesParticipante.addEventListener(
+  "click",
+  guardarTodosLosAjustesActuales
+);
 /* ======================================================
    ELEMENTOS DEL NOMBRE
 ====================================================== */
@@ -193,6 +396,11 @@ const botonDescargar =
 const botonDescargarTodos =
   document.getElementById("descargarTodos");
 
+const botonAutoajustarTodos =
+  document.getElementById(
+    "autoajustarTodos"
+  );
+
 const estadoDescarga =
   document.getElementById("estadoDescarga");
 
@@ -342,43 +550,67 @@ subirExcel.addEventListener(
             );
 
           participantes =
-            filas
-              .map(function (fila, indice) {
-                return {
-                  codigo:
-                    obtenerValorFila(
-                      fila,
-                      "codigo"
-                    ),
+  filas
+    .map(function (fila, indice) {
+    return {
+      codigo:
+        obtenerValorFila(
+          fila,
+          "codigo"
+        ),
 
-                  nombresApellidos:
-                    obtenerValorFila(
-                      fila,
-                      "nombres_apellidos"
-                    ),
+      nombresApellidos:
+        obtenerValorFila(
+          fila,
+          "nombres_apellidos"
+        ),
 
-                  texto1:
-                    obtenerValorFila(
-                      fila,
-                      "texto_1"
-                    ),
+      texto1:
+  obtenerValorFila(
+    fila,
+    "texto_1"
+  ),
 
-                  texto2:
-                    obtenerValorFila(
-                      fila,
-                      "texto_2"
-                    ),
+tamanoTexto1:
+  obtenerValorFila(
+    fila,
+    "tamano_texto_1"
+  ),
 
-                  fecha:
-                    obtenerValorFila(
-                      fila,
-                      "fecha"
-                    ),
+texto2:
+  obtenerValorFila(
+    fila,
+    "texto_2"
+  ),
 
-                  ordenOriginal:
-                    indice
-                };
-              })
+tamanoTexto2:
+  obtenerValorFila(
+    fila,
+    "tamano_texto_2"
+  ),
+
+      fecha:
+  obtenerValorFila(
+    fila,
+    "fecha"
+  ),
+
+tamanoFecha:
+  obtenerValorFila(
+    fila,
+    "tamano_fecha"
+  ),
+
+      tamanoNombre:
+        obtenerValorFila(
+          fila,
+          "tamano_nombre"
+        ),
+
+      ordenOriginal:
+        indice
+    };
+  })
               .filter(function (persona) {
                 return (
                   convertirATexto(
@@ -510,7 +742,6 @@ function llenarSelectorParticipantes() {
   );
 }
 
-
 /* ======================================================
    CARGAR UN PARTICIPANTE DEL EXCEL
 ====================================================== */
@@ -525,6 +756,24 @@ function cargarParticipante(indice) {
 
   participanteSeleccionado =
     persona;
+
+  botonGuardarAjustesParticipante.disabled =
+  false;
+
+estadoAjusteParticipante.textContent =
+  "";
+  
+  botonGuardarAjustesParticipante.disabled =
+  false;
+  
+  estadoAjusteParticipante.textContent =
+  "";
+
+  const ajustes =
+    obtenerAjustesParticipante(
+      persona,
+      indice
+    );
 
   const codigo =
     formatearCodigo(
@@ -563,9 +812,96 @@ function cargarParticipante(indice) {
   actualizarPrimerParrafo();
   actualizarSegundoParrafo();
   actualizarFecha();
+
+  /* Aplicar ajuste manual o tamaño base */
+
+  actualizarTamanoNombre(
+    ajustes.nombre ??
+    tamanosBase.nombre
+  );
+
+  actualizarTamanoContenido(
+    ajustes.texto1 ??
+    tamanosBase.texto1
+  );
+
+  actualizarTamanoContenidoDos(
+    ajustes.texto2 ??
+    tamanosBase.texto2
+  );
+
+  actualizarTamanoFecha(
+    ajustes.fecha ??
+    tamanosBase.fecha
+  );
+
+  /* Autoajustar solo si no existe ajuste manual */
+
+  requestAnimationFrame(
+    function () {
+      if (ajustes.nombre === undefined) {
+        const tamanoFinal =
+          autoajustarElemento(
+            resultado,
+            tamanosBase.nombre,
+            6,
+            true
+          );
+
+        actualizarTamanoNombre(
+          tamanoFinal
+        );
+      }
+
+      if (ajustes.texto1 === undefined) {
+        const tamanoFinal =
+          autoajustarElemento(
+            contenidoCertificado,
+            tamanosBase.texto1,
+            6,
+            false
+          );
+
+        actualizarTamanoContenido(
+          tamanoFinal
+        );
+      }
+
+      if (ajustes.texto2 === undefined) {
+        const tamanoFinal =
+          autoajustarElemento(
+            contenidoCertificadoDos,
+            tamanosBase.texto2,
+            6,
+            false
+          );
+
+        actualizarTamanoContenidoDos(
+          tamanoFinal
+        );
+      }
+
+      if (ajustes.fecha === undefined) {
+        const tamanoFinal =
+          autoajustarElemento(
+            fechaCertificado,
+            tamanosBase.fecha,
+            6,
+            true
+          );
+
+        actualizarTamanoFecha(
+          tamanoFinal
+        );
+      }
+    }
+  );
+
   actualizarBotonesNavegacion();
 }
-
+/* ======================================================
+   NAVEGACIÓN ENTRE PARTICIPANTES
+====================================================== */
 
 function actualizarBotonesNavegacion() {
   const indiceActual =
@@ -648,8 +984,6 @@ certificadoSiguiente.addEventListener(
     );
   }
 );
-
-
 /* ======================================================
    MOSTRAR EL NOMBRE MANUALMENTE
 ====================================================== */
@@ -736,11 +1070,15 @@ function actualizarTamanoNombre(valor) {
     tamano;
 }
 
-
 tamanoTexto.addEventListener(
   "input",
   function () {
     actualizarTamanoNombre(
+      tamanoTexto.value
+    );
+
+    guardarAjusteActual(
+      "nombre",
       tamanoTexto.value
     );
   }
@@ -751,6 +1089,11 @@ tamanoTextoNumero.addEventListener(
   "input",
   function () {
     actualizarTamanoNombre(
+      tamanoTextoNumero.value
+    );
+
+    guardarAjusteActual(
+      "nombre",
       tamanoTextoNumero.value
     );
   }
@@ -975,6 +1318,11 @@ tamanoContenido.addEventListener(
     actualizarTamanoContenido(
       tamanoContenido.value
     );
+
+    guardarAjusteActual(
+      "texto1",
+      tamanoContenido.value
+    );
   }
 );
 
@@ -983,6 +1331,11 @@ tamanoContenidoNumero.addEventListener(
   "input",
   function () {
     actualizarTamanoContenido(
+      tamanoContenidoNumero.value
+    );
+
+    guardarAjusteActual(
+      "texto1",
       tamanoContenidoNumero.value
     );
   }
@@ -1072,6 +1425,11 @@ tamanoContenidoDos.addEventListener(
     actualizarTamanoContenidoDos(
       tamanoContenidoDos.value
     );
+
+    guardarAjusteActual(
+      "texto2",
+      tamanoContenidoDos.value
+    );
   }
 );
 
@@ -1080,6 +1438,11 @@ tamanoContenidoDosNumero.addEventListener(
   "input",
   function () {
     actualizarTamanoContenidoDos(
+      tamanoContenidoDosNumero.value
+    );
+
+    guardarAjusteActual(
+      "texto2",
       tamanoContenidoDosNumero.value
     );
   }
@@ -1169,8 +1532,345 @@ tamanoFecha.addEventListener(
     actualizarTamanoFecha(
       tamanoFecha.value
     );
+
+    guardarAjusteActual(
+      "fecha",
+      tamanoFecha.value
+    );
   }
 );
+
+
+tamanoFechaNumero.addEventListener(
+  "input",
+  function () {
+    actualizarTamanoFecha(
+      tamanoFechaNumero.value
+    );
+
+    guardarAjusteActual(
+      "fecha",
+      tamanoFechaNumero.value
+    );
+  }
+);
+/* ======================================================
+   AUTOAJUSTAR TEXTOS AL CERTIFICADO
+====================================================== */
+
+function autoajustarElemento(
+  elemento,
+  tamanoInicial,
+  tamanoMinimo,
+  unaLinea
+) {
+  let tamano =
+    Number(tamanoInicial);
+
+  if (!Number.isFinite(tamano)) {
+    return tamanoMinimo;
+  }
+
+  elemento.style.whiteSpace =
+    unaLinea
+      ? "nowrap"
+      : "normal";
+
+  elemento.style.fontSize =
+    tamano + "px";
+
+  const cabeHorizontal =
+    function () {
+      return (
+        elemento.scrollWidth <=
+        elemento.clientWidth + 1
+      );
+    };
+
+  const cabeVertical =
+    function () {
+      return (
+        elemento.scrollHeight <=
+        elemento.clientHeight + 1
+      );
+    };
+
+  while (
+    tamano > tamanoMinimo &&
+    (
+      !cabeHorizontal() ||
+      !cabeVertical()
+    )
+  ) {
+    tamano -= 0.5;
+
+    elemento.style.fontSize =
+      tamano + "px";
+  }
+
+  return tamano;
+}
+
+
+function autoajustarNombre(
+  tamanoInicial
+) {
+  const tamanoFinal =
+    autoajustarElemento(
+      resultado,
+      tamanoInicial,
+      6,
+      true
+    );
+
+  resultado.style.fontSize =
+    tamanoFinal + "px";
+}
+
+
+function autoajustarPrimerParrafo(
+  tamanoInicial
+) {
+  const tamanoFinal =
+    autoajustarElemento(
+      contenidoCertificado,
+      tamanoInicial,
+      6,
+      false
+    );
+
+  contenidoCertificado.style.fontSize =
+    tamanoFinal + "px";
+}
+
+
+function autoajustarSegundoParrafo(
+  tamanoInicial
+) {
+  const tamanoFinal =
+    autoajustarElemento(
+      contenidoCertificadoDos,
+      tamanoInicial,
+      6,
+      false
+    );
+
+  contenidoCertificadoDos.style.fontSize =
+    tamanoFinal + "px";
+}
+
+
+function autoajustarFecha(
+  tamanoInicial
+) {
+  const tamanoFinal =
+    autoajustarElemento(
+      fechaCertificado,
+      tamanoInicial,
+      6,
+      true
+    );
+
+  fechaCertificado.style.fontSize =
+    tamanoFinal + "px";
+}
+tamanoFecha.addEventListener(
+  "input",
+  function () {
+    actualizarTamanoFecha(
+      tamanoFecha.value
+    );
+    
+  }
+);
+
+/* ======================================================
+   AUTOAJUSTAR TODOS LOS PARTICIPANTES
+====================================================== */
+
+async function autoajustarParticipante(
+  persona,
+  indice
+) {
+  selectorParticipante.value =
+    String(indice);
+
+  cargarParticipante(indice);
+
+  await esperarRenderizado();
+
+  const ajustes =
+    obtenerAjustesParticipante(
+      persona,
+      indice
+    );
+
+  const autoNombre =
+    document.getElementById(
+      "autoNombre"
+    );
+
+  const autoTexto1 =
+    document.getElementById(
+      "autoTexto1"
+    );
+
+  const autoTexto2 =
+    document.getElementById(
+      "autoTexto2"
+    );
+
+  const autoFecha =
+    document.getElementById(
+      "autoFecha"
+    );
+
+  /*
+    Solo calcula el elemento cuando está marcado
+    y el participante no tiene ya un ajuste manual.
+  */
+
+  if (
+    (!autoNombre || autoNombre.checked) &&
+    ajustes.nombre === undefined
+  ) {
+    ajustes.nombre =
+      autoajustarElemento(
+        resultado,
+        tamanosBase.nombre,
+        6,
+        true
+      );
+  }
+
+  if (
+    (!autoTexto1 || autoTexto1.checked) &&
+    ajustes.texto1 === undefined
+  ) {
+    ajustes.texto1 =
+      autoajustarElemento(
+        contenidoCertificado,
+        tamanosBase.texto1,
+        6,
+        false
+      );
+  }
+
+  if (
+    (!autoTexto2 || autoTexto2.checked) &&
+    ajustes.texto2 === undefined
+  ) {
+    ajustes.texto2 =
+      autoajustarElemento(
+        contenidoCertificadoDos,
+        tamanosBase.texto2,
+        6,
+        false
+      );
+  }
+
+  if (
+    (!autoFecha || autoFecha.checked) &&
+    ajustes.fecha === undefined
+  ) {
+    ajustes.fecha =
+      autoajustarElemento(
+        fechaCertificado,
+        tamanosBase.fecha,
+        6,
+        true
+      );
+  }
+}
+
+
+if (botonAutoajustarTodos) {
+  botonAutoajustarTodos.addEventListener(
+    "click",
+    async function () {
+      if (participantes.length === 0) {
+        alert(
+          "Primero carga el archivo Excel."
+        );
+
+        return;
+      }
+
+      if (!plantilla.src) {
+        alert(
+          "Primero carga la plantilla del certificado."
+        );
+
+        return;
+      }
+
+      /*
+        Toma los tamaños del certificado visible
+        como referencia para todos los demás.
+      */
+
+      actualizarTamanosBaseDesdeVistaActual();
+
+      const indiceOriginal =
+        Number(
+          selectorParticipante.value
+        ) || 0;
+
+      const textoOriginalBoton =
+        botonAutoajustarTodos.textContent;
+
+      botonAutoajustarTodos.disabled =
+        true;
+
+      try {
+        for (
+          let indice = 0;
+          indice < participantes.length;
+          indice += 1
+        ) {
+          botonAutoajustarTodos.textContent =
+            "Autoajustando " +
+            (indice + 1) +
+            " de " +
+            participantes.length +
+            "...";
+
+          await autoajustarParticipante(
+            participantes[indice],
+            indice
+          );
+        }
+
+        selectorParticipante.value =
+          String(indiceOriginal);
+
+        cargarParticipante(
+          indiceOriginal
+        );
+
+        alert(
+          participantes.length +
+          " participantes autoajustados correctamente."
+        );
+      } catch (error) {
+        console.error(
+          "Error al autoajustar:",
+          error
+        );
+
+        alert(
+          "No se pudieron autoajustar todos los participantes."
+        );
+      } finally {
+        botonAutoajustarTodos.disabled =
+          false;
+
+        botonAutoajustarTodos.textContent =
+          textoOriginalBoton;
+      }
+    }
+  );
+}
 
 
 tamanoFechaNumero.addEventListener(
@@ -2249,8 +2949,13 @@ guardarConfiguracion.addEventListener(
         url
       );
 
+      guardarPlantillaEnHistorial(
+        configuracion
+      );
+
       estadoConfiguracion.textContent =
-        "Configuración guardada correctamente.";
+        "Configuración guardada y añadida al historial.";
+
     } catch (error) {
       console.error(error);
 
@@ -2263,6 +2968,344 @@ guardarConfiguracion.addEventListener(
     }
   }
 );
+/* ======================================================
+   HISTORIAL DE PLANTILLAS
+====================================================== */
+
+const historialPlantillas =
+  document.getElementById(
+    "historialPlantillas"
+  );
+
+const buscarPlantilla =
+  document.getElementById(
+    "buscarPlantilla"
+  );
+
+const CLAVE_HISTORIAL_PLANTILLAS =
+  "historialPlantillasCertificados";
+
+
+function obtenerHistorialPlantillas() {
+  try {
+    const historialGuardado =
+      localStorage.getItem(
+        CLAVE_HISTORIAL_PLANTILLAS
+      );
+
+    if (!historialGuardado) {
+      return [];
+    }
+
+    const historial =
+      JSON.parse(
+        historialGuardado
+      );
+
+    return Array.isArray(historial)
+      ? historial
+      : [];
+  } catch (error) {
+    console.error(
+      "No se pudo leer el historial:",
+      error
+    );
+
+    return [];
+  }
+}
+
+
+function guardarHistorialPlantillas(
+  historial
+) {
+  localStorage.setItem(
+    CLAVE_HISTORIAL_PLANTILLAS,
+    JSON.stringify(historial)
+  );
+}
+
+
+function crearIdPlantilla() {
+  if (
+    window.crypto &&
+    typeof window.crypto.randomUUID ===
+      "function"
+  ) {
+    return window.crypto.randomUUID();
+  }
+
+  return (
+    Date.now().toString() +
+    "-" +
+    Math.random()
+      .toString(16)
+      .slice(2)
+  );
+}
+
+
+function formatearFechaPlantilla(fecha) {
+  return new Date(fecha).toLocaleString(
+    "es-ES",
+    {
+      dateStyle: "short",
+      timeStyle: "short"
+    }
+  );
+}
+
+
+function guardarPlantillaEnHistorial(
+  configuracion
+) {
+  const fechaActual =
+    new Date();
+
+  const campoNombrePlantilla =
+    document.getElementById(
+      "nombrePlantilla"
+    );
+
+  const nombrePredeterminado =
+    "Plantilla " +
+    fechaActual.toLocaleDateString(
+      "es-ES"
+    );
+
+  const nombre =
+    campoNombrePlantilla &&
+    campoNombrePlantilla.value.trim()
+      ? campoNombrePlantilla.value.trim()
+      : nombrePredeterminado;
+
+  const historial =
+    obtenerHistorialPlantillas();
+
+  historial.unshift({
+    id: crearIdPlantilla(),
+    nombre: nombre,
+    fecha: fechaActual.toISOString(),
+    configuracion: configuracion
+  });
+
+  const historialLimitado =
+    historial.slice(0, 20);
+
+  guardarHistorialPlantillas(
+    historialLimitado
+  );
+
+  if (campoNombrePlantilla) {
+    campoNombrePlantilla.value = "";
+  }
+
+  mostrarHistorialPlantillas();
+}
+
+
+function abrirPlantillaHistorial(id) {
+  const historial =
+    obtenerHistorialPlantillas();
+
+  const plantillaGuardada =
+    historial.find(
+      function (plantillaItem) {
+        return plantillaItem.id === id;
+      }
+    );
+
+  if (!plantillaGuardada) {
+    alert(
+      "No se encontró la plantilla."
+    );
+
+    return;
+  }
+
+  try {
+    aplicarConfiguracion(
+      plantillaGuardada.configuracion
+    );
+
+    estadoConfiguracion.textContent =
+      'Plantilla "' +
+      plantillaGuardada.nombre +
+      '" cargada correctamente.';
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "No se pudo abrir esta plantilla."
+    );
+  }
+}
+
+
+function eliminarPlantillaHistorial(id) {
+  const historial =
+    obtenerHistorialPlantillas();
+
+  const plantillaGuardada =
+    historial.find(
+      function (plantillaItem) {
+        return plantillaItem.id === id;
+      }
+    );
+
+  if (!plantillaGuardada) {
+    return;
+  }
+
+  const confirmar =
+    confirm(
+      '¿Quieres eliminar la plantilla "' +
+      plantillaGuardada.nombre +
+      '"?'
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  const historialActualizado =
+    historial.filter(
+      function (plantillaItem) {
+        return plantillaItem.id !== id;
+      }
+    );
+
+  guardarHistorialPlantillas(
+    historialActualizado
+  );
+
+  mostrarHistorialPlantillas();
+}
+
+
+function mostrarHistorialPlantillas() {
+  if (!historialPlantillas) {
+    return;
+  }
+
+  let historial =
+    obtenerHistorialPlantillas();
+
+  const textoBusqueda =
+    buscarPlantilla
+      ? buscarPlantilla.value
+          .toLowerCase()
+          .trim()
+      : "";
+
+  if (textoBusqueda) {
+    historial =
+      historial.filter(
+        function (plantillaItem) {
+          return plantillaItem.nombre
+            .toLowerCase()
+            .includes(textoBusqueda);
+        }
+      );
+  }
+
+  historialPlantillas.innerHTML = "";
+
+  if (!historial.length) {
+    historialPlantillas.innerHTML = `
+      <p class="sin-plantillas">
+        Todavía no hay plantillas guardadas.
+      </p>
+    `;
+
+    return;
+  }
+
+  historial.forEach(
+    function (plantillaGuardada) {
+      const elemento =
+        document.createElement("article");
+
+      elemento.className =
+        "plantilla-historial";
+
+      elemento.innerHTML = `
+        <div class="plantilla-historial-info">
+
+          <strong class="plantilla-historial-nombre">
+            ${plantillaGuardada.nombre}
+          </strong>
+
+          <span class="plantilla-historial-fecha">
+            ${formatearFechaPlantilla(
+              plantillaGuardada.fecha
+            )}
+          </span>
+
+        </div>
+
+        <div class="plantilla-historial-acciones">
+
+          <button
+            type="button"
+            class="boton-abrir-plantilla"
+          >
+            Abrir
+          </button>
+
+          <button
+            type="button"
+            class="boton-eliminar-plantilla"
+          >
+            Eliminar
+          </button>
+
+        </div>
+      `;
+
+      const botonAbrir =
+        elemento.querySelector(
+          ".boton-abrir-plantilla"
+        );
+
+      const botonEliminar =
+        elemento.querySelector(
+          ".boton-eliminar-plantilla"
+        );
+
+      botonAbrir.addEventListener(
+        "click",
+        function () {
+          abrirPlantillaHistorial(
+            plantillaGuardada.id
+          );
+        }
+      );
+
+      botonEliminar.addEventListener(
+        "click",
+        function () {
+          eliminarPlantillaHistorial(
+            plantillaGuardada.id
+          );
+        }
+      );
+
+      historialPlantillas.appendChild(
+        elemento
+      );
+    }
+  );
+}
+if (buscarPlantilla) {
+  buscarPlantilla.addEventListener(
+    "input",
+    mostrarHistorialPlantillas
+  );
+}
+
+
+mostrarHistorialPlantillas();
 /* ======================================================
    CARGAR CONFIGURACIÓN DESDE JSON
 ====================================================== */
@@ -2553,3 +3596,254 @@ cargarConfiguracion.addEventListener(
     );
   }
 );
+/* ======================================================
+   MODO OSCURO
+====================================================== */
+
+const botonModoOscuro =
+  document.getElementById(
+    "botonModoOscuro"
+  );
+
+function actualizarBotonModo() {
+  const oscuro =
+    document.body.classList.contains(
+      "modo-oscuro"
+    );
+
+  botonModoOscuro.textContent =
+  oscuro ? "☀️" : "🌙";
+}
+
+const modoGuardado =
+  localStorage.getItem(
+    "modoOscuro"
+  );
+
+if (modoGuardado === "true") {
+  document.body.classList.add(
+    "modo-oscuro"
+  );
+}
+
+actualizarBotonModo();
+
+botonModoOscuro.addEventListener(
+  "click",
+  function () {
+    document.body.classList.toggle(
+      "modo-oscuro"
+    );
+
+    const oscuro =
+      document.body.classList.contains(
+        "modo-oscuro"
+      );
+
+    localStorage.setItem(
+      "modoOscuro",
+      oscuro
+    );
+
+    actualizarBotonModo();
+  }
+);
+/* ======================================================
+   ARRASTRAR ARCHIVO EXCEL
+====================================================== */
+
+const zonaExcel =
+  document.getElementById("zonaExcel");
+
+function evitarComportamientoNavegador(evento) {
+  evento.preventDefault();
+  evento.stopPropagation();
+}
+
+[
+  "dragenter",
+  "dragover",
+  "dragleave",
+  "drop"
+].forEach(function (nombreEvento) {
+  zonaExcel.addEventListener(
+    nombreEvento,
+    evitarComportamientoNavegador
+  );
+});
+
+[
+  "dragenter",
+  "dragover"
+].forEach(function (nombreEvento) {
+  zonaExcel.addEventListener(
+    nombreEvento,
+    function () {
+      zonaExcel.classList.add(
+        "arrastrando"
+      );
+    }
+  );
+});
+
+[
+  "dragleave",
+  "drop"
+].forEach(function (nombreEvento) {
+  zonaExcel.addEventListener(
+    nombreEvento,
+    function () {
+      zonaExcel.classList.remove(
+        "arrastrando"
+      );
+    }
+  );
+});
+
+zonaExcel.addEventListener(
+  "drop",
+  function (evento) {
+    const archivos =
+      evento.dataTransfer.files;
+
+    if (!archivos.length) {
+      return;
+    }
+
+    const archivo =
+      archivos[0];
+
+    const nombre =
+      archivo.name.toLowerCase();
+
+    const esExcel =
+      nombre.endsWith(".xlsx") ||
+      nombre.endsWith(".xls") ||
+      nombre.endsWith(".csv");
+
+    if (!esExcel) {
+      alert(
+        "Selecciona un archivo Excel, XLS o CSV."
+      );
+
+      return;
+    }
+
+    const transferencia =
+      new DataTransfer();
+
+    transferencia.items.add(
+      archivo
+    );
+
+    subirExcel.files =
+      transferencia.files;
+
+    subirExcel.dispatchEvent(
+      new Event(
+        "change",
+        {
+          bubbles: true
+        }
+      )
+    );
+  }
+);
+/* ======================================================
+   ARRASTRAR IMAGEN DE PLANTILLA
+====================================================== */
+
+const zonaPlantilla =
+  document.getElementById("zonaPlantilla");
+
+[
+  "dragenter",
+  "dragover",
+  "dragleave",
+  "drop"
+].forEach(function (nombreEvento) {
+  zonaPlantilla.addEventListener(
+    nombreEvento,
+    evitarComportamientoNavegador
+  );
+});
+
+[
+  "dragenter",
+  "dragover"
+].forEach(function (nombreEvento) {
+  zonaPlantilla.addEventListener(
+    nombreEvento,
+    function () {
+      zonaPlantilla.classList.add(
+        "arrastrando"
+      );
+    }
+  );
+});
+
+[
+  "dragleave",
+  "drop"
+].forEach(function (nombreEvento) {
+  zonaPlantilla.addEventListener(
+    nombreEvento,
+    function () {
+      zonaPlantilla.classList.remove(
+        "arrastrando"
+      );
+    }
+  );
+});
+
+zonaPlantilla.addEventListener(
+  "drop",
+  function (evento) {
+    const archivos =
+      evento.dataTransfer.files;
+
+    if (!archivos.length) {
+      return;
+    }
+
+    const archivo =
+      archivos[0];
+
+    const tipoValido =
+      archivo.type === "image/png" ||
+      archivo.type === "image/jpeg";
+
+    if (!tipoValido) {
+      alert(
+        "Selecciona una imagen PNG o JPG."
+      );
+
+      return;
+    }
+
+    const transferencia =
+      new DataTransfer();
+
+    transferencia.items.add(
+      archivo
+    );
+
+    subirPlantilla.files =
+      transferencia.files;
+
+    subirPlantilla.dispatchEvent(
+      new Event(
+        "change",
+        {
+          bubbles: true
+        }
+      )
+    );
+  }
+);
+if (
+  typeof mostrarHistorialPlantillas ===
+  "function"
+) {
+  mostrarHistorialPlantillas();
+}

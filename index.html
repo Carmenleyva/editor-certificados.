@@ -20,6 +20,15 @@
 
   <div class="barra-colores"></div>
 
+  <button
+    type="button"
+    id="botonModoOscuro"
+    class="boton-modo"
+    title="Cambiar tema"
+  >
+    🌙
+  </button>
+
   <img
     src="logo.png"
     alt="Impulsa"
@@ -116,11 +125,30 @@
         Selecciona el archivo Excel:
       </label>
 
-      <input
-        type="file"
-        id="subirExcel"
-        accept=".xlsx,.xls,.csv"
-      >
+      <label
+  for="subirExcel"
+  id="zonaExcel"
+  class="zona-arrastre"
+>
+  <span class="zona-arrastre-icono">
+    📊
+  </span>
+
+  <strong>
+    Arrastra aquí el archivo Excel
+  </strong>
+
+  <span>
+    o haz clic para seleccionarlo
+  </span>
+</label>
+
+<input
+  type="file"
+  id="subirExcel"
+  accept=".xlsx,.xls,.csv"
+  hidden
+>
 
       <p id="estadoExcel">
         Todavía no se ha cargado ningún archivo.
@@ -151,6 +179,71 @@
           <div id="codigoActual">
             —
           </div>
+          <button
+  type="button"
+  id="guardarAjustesParticipante"
+  disabled
+>
+  ✓ Guardar ajustes de este participante
+</button>
+
+<p id="estadoAjusteParticipante"></p>
+        <section class="autoajuste-panel">
+
+  <h4>🤖 Autoajuste inteligente</h4>
+
+  <p class="descripcion-autoajuste">
+    Selecciona qué elementos deseas ajustar automáticamente.
+  </p>
+
+  <div class="lista-autoajuste">
+
+    <label>
+      <input
+        type="checkbox"
+        id="autoNombre"
+        checked
+      >
+      Nombre
+    </label>
+
+    <label>
+      <input
+        type="checkbox"
+        id="autoTexto1"
+        checked
+      >
+      Primer párrafo
+    </label>
+
+    <label>
+      <input
+        type="checkbox"
+        id="autoTexto2"
+        checked
+      >
+      Segundo párrafo
+    </label>
+
+    <label>
+      <input
+        type="checkbox"
+        id="autoFecha"
+        checked
+      >
+      Fecha
+    </label>
+
+  </div>
+
+  <button
+    type="button"
+    id="autoajustarTodos"
+  >
+    🤖 Autoajustar todos
+  </button>
+
+</section>
         </div>
 
       </div>
@@ -756,126 +849,211 @@
       </main>
   <aside class="panel-vista-previa">
 
-      <!-- PLANTILLA -->
-      <section class="bloque-editor">
-        <h3>Plantilla y vista previa</h3>
+      <!-- PLANTILLA Y VISTA PREVIA -->
+<section class="bloque-editor">
+  <h3>Plantilla y vista previa</h3>
 
-        <label
-          class="titulo-campo"
-          for="subirPlantilla"
-        >
-          Plantilla del certificado:
-        </label>
+  <label
+    class="titulo-campo"
+    for="subirPlantilla"
+  >
+    Plantilla del certificado
+  </label>
 
-        <input
-          type="file"
-          id="subirPlantilla"
-          accept="image/png,image/jpeg"
-        >
+  <label
+    for="subirPlantilla"
+    id="zonaPlantilla"
+    class="zona-arrastre"
+  >
+    <span class="zona-arrastre-icono">
+      🖼️
+    </span>
 
-        <div class="certificado">
+    <strong>
+      Arrastra aquí la plantilla
+    </strong>
 
-          <img
-            id="plantilla"
-            alt=""
-            >
+    <span>
+      o haz clic para seleccionarla
+    </span>
+  </label>
 
-          <h2 id="resultado">
-            Aquí aparecerá el nombre
-          </h2>
+  <input
+    type="file"
+    id="subirPlantilla"
+    accept="image/png,image/jpeg"
+    hidden
+  >
 
-          <div id="contenidoCertificado">
-            Por haber participado satisfactoriamente en esta actividad.
-          </div>
+  <div class="certificado">
 
-          <div id="contenidoCertificadoDos">
-            Este certificado reconoce su dedicación y compromiso.
-          </div>
+    <img
+      id="plantilla"
+      alt=""
+    >
 
-          <div id="fechaCertificado">
-            13 de julio de 2026
-          </div>
+    <h2 id="resultado">
+      Aquí aparecerá el nombre
+    </h2>
 
-        </div>
+    <div id="contenidoCertificado">
+      Por haber participado satisfactoriamente en esta actividad.
+    </div>
 
-        <div class="fila-navegacion">
-          <button
-            type="button"
-            id="certificadoAnterior"
-            disabled
-          >
-            ← Certificado anterior
-          </button>
+    <div id="contenidoCertificadoDos">
+      Este certificado reconoce su dedicación y compromiso.
+    </div>
 
-          <button
-            type="button"
-            id="certificadoSiguiente"
-            disabled
-          >
-            Siguiente certificado →
-          </button>
-        </div>
-
-        <div class="fila-descargas">
-          <button
-            type="button"
-            id="descargar"
-          >
-            Descargar certificado
-          </button>
-
-          <button
-            type="button"
-            id="descargarTodos"
-            disabled
-          >
-            Descargar todos los certificados
-          </button>
-        </div>
-
-        <p id="estadoDescarga"></p>
-      </section>
-
-    <!-- PLANTILLAS -->
-<!-- GUARDAR PLANTILLA -->
-      <section class="bloque-editor guardar-plantilla">
-        <h3>Guardar plantilla</h3>
-
-        <p class="descripcion-seccion">
-          Guarda la configuración actual del certificado para reutilizarla en futuros proyectos.
-        </p>
-
-        <div class="fila-configuracion">
-          <button
-            type="button"
-            id="guardarConfiguracion"
-          >
-            💾 Guardar plantilla
-          </button>
-        </div>
-      </section>
-
-    </aside>
+    <div id="fechaCertificado">
+      13 de julio de 2026
+    </div>
 
   </div>
 
+  <div class="fila-navegacion">
+
+    <button
+      type="button"
+      id="certificadoAnterior"
+      disabled
+    >
+      ← Certificado anterior
+    </button>
+
+    <div class="fila-navegacion">
+
+  <button
+    type="button"
+    id="certificadoAnterior"
+    disabled
+  >
+    ← Certificado anterior
+  </button>
+
+  <button
+    type="button"
+    id="certificadoSiguiente"
+    disabled
+  >
+    Siguiente certificado →
+  </button>
+
 </div>
 
-    <!-- Librería para leer Excel -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
-    ></script>
+<div class="fila-caso-especial">
 
-    <!-- Librería para convertir el certificado en imagen -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
-    ></script>
+  <button
+    type="button"
+    id="guardarAjustesParticipante"
+    disabled
+  >
+    ✓ Guardar como caso especial
+  </button>
 
-    <!-- Librería para crear el ZIP -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
-    ></script>
+  <p id="estadoAjusteParticipante"></p>
 
-    <script src="./script.js"></script>
-  </body>
+</div>
+
+<div class="fila-descargas">
+
+    <button
+      type="button"
+      id="descargar"
+    >
+      Descargar certificado
+    </button>
+
+    <button
+      type="button"
+      id="descargarTodos"
+      disabled
+    >
+      Descargar todos los certificados
+    </button>
+
+  </div>
+
+  <p id="estadoDescarga"></p>
+</section>
+
+<!-- GUARDAR PLANTILLA -->
+<section class="bloque-editor guardar-plantilla">
+
+  <h3>Guardar plantilla</h3>
+
+  <p class="descripcion-seccion">
+    Guarda la configuración actual para reutilizarla cuando quieras.
+  </p>
+
+  <label
+    for="nombrePlantilla"
+    class="titulo-campo"
+  >
+    Nombre de la plantilla
+  </label>
+
+  <input
+    type="text"
+    id="nombrePlantilla"
+    placeholder="Ej. Certificado Pastas Frescas"
+  >
+
+  <div class="fila-configuracion">
+
+    <button
+      type="button"
+      id="guardarConfiguracion"
+    >
+      💾 Guardar plantilla
+    </button>
+
+  </div>
+
+  <hr class="separador-plantillas">
+
+  <h4 class="titulo-historial">
+    Plantillas recientes
+  </h4>
+
+  <input
+    type="text"
+    id="buscarPlantilla"
+    class="buscar-plantilla"
+    placeholder="🔍 Buscar plantilla..."
+  >
+
+  <div id="historialPlantillas">
+
+    <p class="sin-plantillas">
+      Todavía no hay plantillas guardadas.
+    </p>
+
+  </div>
+
+</section>
+
+</aside>
+
+</div>
+
+</div>
+
+<!-- Librería para leer Excel -->
+<script
+  src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+></script>
+
+<!-- Librería para convertir el certificado en imagen -->
+<script
+  src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+></script>
+
+<!-- Librería para crear el ZIP -->
+<script
+  src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+></script>
+
+<script src="./script.js"></script>
+
+</body>
 </html>
