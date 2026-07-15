@@ -905,8 +905,8 @@ input[type="file"] {
 .editor-dos-columnas {
   display: grid;
   grid-template-columns:
-    minmax(0, 42%)
-    minmax(0, 58%);
+    minmax(0, 42fr)
+    minmax(0, 58fr);
 
   gap: 28px;
   align-items: start;
