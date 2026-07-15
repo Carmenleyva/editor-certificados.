@@ -242,73 +242,88 @@
       
 </section>
 
-    <section class="bloque-editor">
-      <h3>Plantillas</h3>
-
-      <p class="descripcion-seccion">
-        Carga una plantilla para continuar trabajando sobre una configuración existente.
-      </p>
-
-      <div class="fila-configuracion">
-
-        <label
-          for="cargarConfiguracion"
-          class="boton-cargar-configuracion"
-          role="button"
-        >
-          📂 Cargar plantilla
-        </label>
-
-        <input
-          type="file"
-          id="cargarConfiguracion"
-          accept=".json"
-          hidden
-        >
-
-      </div>
-
-      <p id="estadoConfiguracion">
-        No se ha cargado ninguna plantilla.
-      </p>
-    </section>
-    
-
     <!-- FUENTES PERSONALIZADAS -->
-    <section class="bloque-editor">
-      <h3>Fuentes personalizadas</h3>
+    <section class="bloque-editor bloque-proyecto">
 
-      <p class="descripcion-seccion">
-        Añade tipografías para utilizarlas en el nombre, los párrafos o la fecha.
-      </p>
+  <h3>Proyecto</h3>
 
-      <label
-        for="subirFuente"
-        class="boton-subir-fuente"
-      >
-        + Añadir fuente
-      </label>
+  <p class="descripcion-seccion">
+    Guarda el trabajo actual, abre un proyecto anterior o comienza uno nuevo.
+  </p>
 
-      <input
-        type="file"
-        id="subirFuente"
-        accept=".ttf,.otf,.woff,.woff2"
-        multiple
-        hidden
-      >
+  <label
+    class="titulo-campo"
+    for="nombreProyecto"
+  >
+    Nombre del proyecto
+  </label>
 
-      <div
-        id="listaFuentes"
-        class="lista-fuentes"
-      >
-        <p
-          id="estadoFuente"
-          class="mensaje-fuentes"
-        >
-          No se ha cargado ninguna fuente personalizada.
-        </p>
-      </div>
-    </section>
+  <input
+    type="text"
+    id="nombreProyecto"
+    placeholder="Ej. Certificados curso de pasta"
+  >
+
+  <div class="botones-proyecto">
+
+    <button
+      type="button"
+      id="guardarProyecto"
+      class="boton-proyecto boton-guardar-proyecto"
+      title="Guardar proyecto"
+    >
+      <span class="icono-proyecto">
+        💾
+      </span>
+
+      <span>
+        Guardar
+      </span>
+    </button>
+
+    <label
+      for="abrirProyecto"
+      class="boton-proyecto boton-abrir-proyecto"
+      title="Abrir proyecto"
+    >
+      <span class="icono-proyecto">
+        📂
+      </span>
+
+      <span>
+        Abrir
+      </span>
+    </label>
+
+    <input
+      type="file"
+      id="abrirProyecto"
+      accept=".json"
+      hidden
+    >
+
+    <button
+      type="button"
+      id="nuevoProyecto"
+      class="boton-proyecto boton-nuevo-proyecto"
+      title="Comenzar un proyecto nuevo"
+    >
+      <span class="icono-proyecto">
+        ＋
+      </span>
+
+      <span>
+        Nuevo
+      </span>
+    </button>
+
+  </div>
+
+  <p id="estadoProyecto">
+    No se ha guardado ni abierto ningún proyecto.
+  </p>
+
+</section>
 
       <!-- NOMBRE -->
       <section class="bloque-editor">

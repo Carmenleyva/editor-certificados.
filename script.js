@@ -36,12 +36,17 @@ const estadoAjusteParticipante =
 
 let participantes = [];
 let participanteSeleccionado = null;
+let plantillaGuardadaBase64 = "";
 
 /* ======================================================
    AJUSTES MANUALES POR PARTICIPANTE
 ====================================================== */
 
 const ajustesParticipantes = {};
+
+
+const CLAVE_PROYECTO_CERTIFICADOS =
+  "proyectoCertificadosActual";
 
 const tamanosBase = {
   nombre: 18,
@@ -107,6 +112,139 @@ function actualizarTamanosBaseDesdeVistaActual() {
   };
 
 }
+
+function obtenerDatosProyecto() {
+  return {
+    version: 1,
+
+    nombreProyecto:
+      nombreProyecto
+        ? nombreProyecto.value.trim()
+        : "",
+
+    fechaGuardado:
+     new Date().toISOString(),
+
+    plantillaBase64:
+     plantillaGuardadaBase64,
+
+    participantes:
+      participantes,
+
+    ajustesParticipantes:
+      ajustesParticipantes,
+
+    tamanosBase:
+      tamanosBase,
+
+    posicionesBase:
+      posicionesBase,
+
+    indiceParticipanteActual:
+      Number(
+        selectorParticipante.value
+      ) || 0,
+
+    configuracionVisual:
+      obtenerConfiguracionActual()
+  };
+}
+
+
+function guardarProyectoAutomaticamente() {
+  try {
+    const proyecto =
+      obtenerDatosProyecto();
+
+    localStorage.setItem(
+      CLAVE_PROYECTO_CERTIFICADOS,
+      JSON.stringify(proyecto)
+    );
+  } catch (error) {
+    console.error(
+      "No se pudo guardar el proyecto automáticamente:",
+      error
+    );
+  }
+}
+
+
+function descargarProyecto() {
+  try {
+    if (participantes.length === 0) {
+      alert(
+        "Primero carga un archivo Excel."
+      );
+
+      return;
+    }
+
+    const proyecto =
+      obtenerDatosProyecto();
+
+    const contenidoJson =
+      JSON.stringify(
+        proyecto,
+        null,
+        2
+      );
+
+    const archivo =
+      new Blob(
+        [contenidoJson],
+        {
+          type: "application/json"
+        }
+      );
+
+    const url =
+      URL.createObjectURL(
+        archivo
+      );
+
+    const enlace =
+      document.createElement("a");
+
+    const nombreSeguro =
+      limpiarNombreArchivo(
+        nombreProyecto.value.trim() ||
+        "proyecto-certificados"
+      );
+
+    enlace.href =
+      url;
+
+    enlace.download =
+      nombreSeguro + ".json";
+
+    document.body.appendChild(
+      enlace
+    );
+
+    enlace.click();
+    enlace.remove();
+
+    URL.revokeObjectURL(
+      url
+    );
+
+    estadoProyecto.textContent =
+      "✓ Proyecto guardado correctamente.";
+  } catch (error) {
+    console.error(
+      "No se pudo guardar el proyecto:",
+      error
+    );
+
+    estadoProyecto.textContent =
+      "No se pudo guardar el proyecto.";
+
+    alert(
+      "No se pudo guardar el proyecto."
+    );
+  }
+}
+
 
 function obtenerClaveParticipante(
   persona,
@@ -243,6 +381,9 @@ function guardarTodosLosAjustesActuales() {
       participanteSeleccionado
         .nombresApellidos
     );
+ 
+  guardarProyectoAutomaticamente();
+  
 }
 
 
@@ -294,6 +435,36 @@ const estadoConfiguracion =
   document.getElementById(
     "estadoConfiguracion"
   );
+
+const nombreProyecto =
+  document.getElementById(
+    "nombreProyecto"
+  );
+
+const guardarProyecto =
+  document.getElementById(
+    "guardarProyecto"
+  );
+
+const abrirProyecto =
+  document.getElementById(
+    "abrirProyecto"
+  );
+
+const estadoProyecto =
+  document.getElementById(
+    "estadoProyecto"
+  );
+
+const nuevoProyecto =
+  document.getElementById(
+    "nuevoProyecto"
+  );
+
+guardarProyecto.addEventListener(
+  "click",
+  descargarProyecto
+);
 
 /* ======================================================
    ELEMENTOS DE LA PLANTILLA
@@ -696,6 +867,9 @@ selectorParticipante.value =
   "0";
 
           cargarParticipante(0);
+          
+          guardarProyectoAutomaticamente();
+          
         } catch (error) {
           console.error(error);
 
@@ -1095,10 +1269,30 @@ subirPlantilla.addEventListener(
       return;
     }
 
+    const lectorPlantilla =
+  new FileReader();
+
+lectorPlantilla.onload =
+  function (evento) {
+    plantillaGuardadaBase64 =
+      evento.target.result;
+
     plantilla.src =
-      URL.createObjectURL(
-        archivo
-      );
+      plantillaGuardadaBase64;
+
+    guardarProyectoAutomaticamente();
+  };
+
+lectorPlantilla.onerror =
+  function () {
+    alert(
+      "No se pudo leer la plantilla."
+    );
+  };
+
+lectorPlantilla.readAsDataURL(
+  archivo
+);
   }
 );
 
@@ -1928,6 +2122,8 @@ if (botonAutoajustarTodos) {
         cargarParticipante(
           indiceOriginal
         );
+
+        guardarProyectoAutomaticamente();
 
         alert(
           participantes.length +
@@ -3922,6 +4118,165 @@ zonaPlantilla.addEventListener(
     );
   }
 );
+
+function recuperarProyectoAutomatico() {
+  try {
+    const proyectoGuardado =
+      localStorage.getItem(
+        CLAVE_PROYECTO_CERTIFICADOS
+      );
+
+    if (!proyectoGuardado) {
+      return;
+    }
+
+    const proyecto =
+      JSON.parse(
+        proyectoGuardado
+      );
+
+    if (
+      !proyecto ||
+      proyecto.version !== 1 ||
+      !Array.isArray(
+        proyecto.participantes
+      )
+    ) {
+      return;
+    }
+
+    if (proyecto.plantillaBase64) {
+      plantillaGuardadaBase64 =
+       proyecto.plantillaBase64;
+
+      
+  plantilla.src =
+    plantillaGuardadaBase64;
+}
+
+    participantes =
+      proyecto.participantes;
+
+    Object.keys(
+      ajustesParticipantes
+    ).forEach(function (clave) {
+      delete ajustesParticipantes[
+        clave
+      ];
+    });
+
+    Object.assign(
+      ajustesParticipantes,
+      proyecto.ajustesParticipantes ||
+      {}
+    );
+
+    Object.assign(
+      tamanosBase,
+      proyecto.tamanosBase ||
+      {}
+    );
+
+    Object.assign(
+      posicionesBase,
+      proyecto.posicionesBase ||
+      {}
+    );
+
+    llenarSelectorParticipantes();
+
+    selectorParticipante.disabled =
+      false;
+
+    botonDescargarTodos.disabled =
+      false;
+
+    estadoExcel.textContent =
+      participantes.length +
+      " participantes recuperados del guardado automático.";
+
+    if (
+      proyecto.configuracionVisual
+    ) {
+      aplicarConfiguracion(
+        proyecto.configuracionVisual
+      );
+    }
+
+    let indice =
+      Number(
+        proyecto.indiceParticipanteActual
+      );
+
+    if (
+      !Number.isInteger(indice) ||
+      indice < 0 ||
+      indice >= participantes.length
+    ) {
+      indice = 0;
+    }
+
+    selectorParticipante.value =
+      String(indice);
+
+    cargarParticipante(
+      indice
+    );
+
+    estadoProyecto.textContent =
+      "✓ Proyecto recuperado automáticamente.";
+  } catch (error) {
+    console.error(
+      "No se pudo recuperar el proyecto:",
+      error
+    );
+  }
+}
+
+function comenzarNuevoProyecto() {
+  const confirmar =
+    confirm(
+      "¿Seguro que deseas comenzar un proyecto nuevo? Guarda primero el proyecto actual si quieres conservarlo."
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  localStorage.removeItem(
+    CLAVE_PROYECTO_CERTIFICADOS
+  );
+
+  participantes = [];
+  participanteSeleccionado = null;
+  plantillaGuardadaBase64 = "";
+
+  Object.keys(
+    ajustesParticipantes
+  ).forEach(function (clave) {
+    delete ajustesParticipantes[
+      clave
+    ];
+  });
+
+  if (nombreProyecto) {
+    nombreProyecto.value = "";
+  }
+
+  window.location.reload();
+}
+
+
+if (nuevoProyecto) {
+  nuevoProyecto.addEventListener(
+    "click",
+    comenzarNuevoProyecto
+  );
+}
+
+
+recuperarProyectoAutomatico();
+
 if (
   typeof mostrarHistorialPlantillas ===
   "function"
