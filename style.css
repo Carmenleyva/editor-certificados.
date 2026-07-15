@@ -266,10 +266,11 @@ input[type="file"] {
 
 .panel-controles {
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px 16px;
   align-items: end;
   margin-top: 12px;
+  width: 100%;
 }
 
 .grupo-control {
@@ -904,8 +905,8 @@ input[type="file"] {
 .editor-dos-columnas {
   display: grid;
   grid-template-columns:
-    minmax(380px, 42%)
-    minmax(500px, 58%);
+    minmax(0, 42%)
+    minmax(0, 58%);
 
   gap: 28px;
   align-items: start;
@@ -914,6 +915,12 @@ input[type="file"] {
 .panel-editor,
 .panel-vista-previa {
   min-width: 0;
+  width: 100%;
+}
+
+.panel-editor .bloque-editor {
+  width: 100%;
+  overflow: hidden;
 }
 
 .panel-vista-previa{
@@ -1274,10 +1281,34 @@ body.modo-oscuro .zona-arrastre strong {
    AUTOAJUSTE INTELIGENTE
 ====================================================== */
 
-.autoajuste-panel{
-    margin-top:25px;
-    padding-top:20px;
-    border-top:1px solid #d9e5ec;
+.autoajuste-panel {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+  padding: 20px 0 0;
+  overflow: hidden;
+}
+
+.panel-controles {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.grupo-control {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.grupo-control select,
+.grupo-control input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .autoajuste-panel h4{

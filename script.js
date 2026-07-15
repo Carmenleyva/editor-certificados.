@@ -50,7 +50,30 @@ const tamanosBase = {
   fecha: 10
 };
 
+const posicionesBase = {
+  nombre: {
+    left: "",
+    top: ""
+  },
+
+  texto1: {
+    left: "",
+    top: ""
+  },
+
+  texto2: {
+    left: "",
+    top: ""
+  },
+
+  fecha: {
+    left: "",
+    top: ""
+  }
+};
+
 function actualizarTamanosBaseDesdeVistaActual() {
+
   tamanosBase.nombre =
     Number(tamanoTexto.value);
 
@@ -62,6 +85,27 @@ function actualizarTamanosBaseDesdeVistaActual() {
 
   tamanosBase.fecha =
     Number(tamanoFecha.value);
+
+  posicionesBase.nombre = {
+    left: resultado.style.left,
+    top: resultado.style.top
+  };
+
+  posicionesBase.texto1 = {
+    left: contenidoCertificado.style.left,
+    top: contenidoCertificado.style.top
+  };
+
+  posicionesBase.texto2 = {
+    left: contenidoCertificadoDos.style.left,
+    top: contenidoCertificadoDos.style.top
+  };
+
+  posicionesBase.fecha = {
+    left: fechaCertificado.style.left,
+    top: fechaCertificado.style.top
+  };
+
 }
 
 function obtenerClaveParticipante(
@@ -80,23 +124,6 @@ function obtenerClaveParticipante(
   return "participante-" + indice;
 }
 
-
-function obtenerAjustesParticipante(
-  persona,
-  indice
-) {
-  const clave =
-    obtenerClaveParticipante(
-      persona,
-      indice
-    );
-
-  if (!ajustesParticipantes[clave]) {
-    ajustesParticipantes[clave] = {};
-  }
-
-  return ajustesParticipantes[clave];
-}
 function obtenerAjustesParticipante(
   persona,
   indice
@@ -115,34 +142,6 @@ function obtenerAjustesParticipante(
 }
 
 
-/* Guardar cambios manuales del participante actual */
-
-function guardarAjusteActual(
-  campo,
-  valor
-) {
-  if (!participanteSeleccionado) {
-    return;
-  }
-
-  const indice =
-    Number(
-      selectorParticipante.value
-    );
-
-  if (!Number.isInteger(indice)) {
-    return;
-  }
-
-  const ajustes =
-    obtenerAjustesParticipante(
-      participanteSeleccionado,
-      indice
-    );
-
-  ajustes[campo] =
-    Number(valor);
-}
 /* Guardar cambios manuales del participante actual */
 
 function guardarAjusteActual(
@@ -214,6 +213,26 @@ function guardarTodosLosAjustesActuales() {
     Number(
       tamanoFecha.value
     );
+
+  ajustes.posicionNombre = {
+  left: resultado.style.left,
+  top: resultado.style.top
+    };
+
+  ajustes.posicionTexto1 = {
+  left: contenidoCertificado.style.left,
+  top: contenidoCertificado.style.top
+    };
+
+  ajustes.posicionTexto2 = {
+  left: contenidoCertificadoDos.style.left,
+  top: contenidoCertificadoDos.style.top
+    };
+
+  ajustes.posicionFecha = {
+  left: fechaCertificado.style.left,
+  top: fechaCertificado.style.top
+    };
 
   ajustes.esManual =
     true;
@@ -762,12 +781,6 @@ function cargarParticipante(indice) {
 
 estadoAjusteParticipante.textContent =
   "";
-  
-  botonGuardarAjustesParticipante.disabled =
-  false;
-  
-  estadoAjusteParticipante.textContent =
-  "";
 
   const ajustes =
     obtenerAjustesParticipante(
@@ -835,6 +848,54 @@ estadoAjusteParticipante.textContent =
     tamanosBase.fecha
   );
 
+  /* Aplicar posición especial o posición base */
+
+const posicionNombre =
+  ajustes.posicionNombre ??
+  posicionesBase.nombre;
+
+resultado.style.left =
+  posicionNombre.left;
+
+resultado.style.top =
+  posicionNombre.top;
+
+
+const posicionTexto1 =
+  ajustes.posicionTexto1 ??
+  posicionesBase.texto1;
+
+contenidoCertificado.style.left =
+  posicionTexto1.left;
+
+contenidoCertificado.style.top =
+  posicionTexto1.top;
+
+
+const posicionTexto2 =
+  ajustes.posicionTexto2 ??
+  posicionesBase.texto2;
+
+contenidoCertificadoDos.style.left =
+  posicionTexto2.left;
+
+contenidoCertificadoDos.style.top =
+  posicionTexto2.top;
+
+
+const posicionFecha =
+  ajustes.posicionFecha ??
+  posicionesBase.fecha;
+
+fechaCertificado.style.left =
+  posicionFecha.left;
+
+fechaCertificado.style.top =
+  posicionFecha.top;
+
+
+
+  
   /* Autoajustar solo si no existe ajuste manual */
 
   requestAnimationFrame(
@@ -1781,6 +1842,26 @@ async function autoajustarParticipante(
         true
       );
   }
+
+  if (!ajustes.esManual) {
+
+  ajustes.posicionNombre = {
+    ...posicionesBase.nombre
+  };
+
+  ajustes.posicionTexto1 = {
+    ...posicionesBase.texto1
+  };
+
+  ajustes.posicionTexto2 = {
+    ...posicionesBase.texto2
+  };
+
+  ajustes.posicionFecha = {
+    ...posicionesBase.fecha
+  };
+
+}
 }
 
 
